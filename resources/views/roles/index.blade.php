@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Roles</title>
-</head>
-<body>
-    Read Role<br>
-    @can('create role')
-        <button>tambah</button>    
-    @endcan
-</body>
+@extends('layouts.master')
+@section('title', 'Roles')
+
+@section('content')
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="app-brand justify-content-center mb-4">
+            Read Role<br>
+            @can('create role')
+            <button>tambah</button>
+            @endcan
+        </div>
+    </div>
+</div>
+
+@endsection

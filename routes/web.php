@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('index')->middleware(['auth']);
+
+require __DIR__.'/auth.php';
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,8 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-
+Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware(['auth']);
 
 // Route::controller(RoleController::class)->group(function(){
 //     Route::get('/roles', 'index')->middleware('can:read role');
@@ -38,6 +39,6 @@ require __DIR__.'/auth.php';
 // });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::group(['prefix' => 'konfigurasi','middleware' => ['auth']],function () {
     Route::resource('roles', RoleController::class);                        
 });

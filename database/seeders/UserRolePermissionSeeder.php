@@ -26,13 +26,15 @@ class UserRolePermissionSeeder extends Seeder
         // DB::beginTransaction();
         // try {
             $staff = User::create(array_merge([
-                'email' => 'staff@gmail.com',
+                'email' => 'afikri124@gmail.com',
                 'name' => 'staff',
+                'username' => 'staff',
             ], $default_user_value));
     
             $admin = User::create(array_merge([
-                'email' => 'admin@gmail.com',
+                'email' => 'no-reply@jgu.ac.id',
                 'name' => 'admin',
+                'username' => 'admin',
             ], $default_user_value));
     
             $role_staff = Role::create(['name' => 'staff']);
@@ -42,11 +44,13 @@ class UserRolePermissionSeeder extends Seeder
             $permission = Permission::create(['name' => 'create role']);
             $permission = Permission::create(['name' => 'update role']);
             $permission = Permission::create(['name' => 'delete role']);
+            Permission::create(['name' => 'read konfigurasi']);
 
             $role_admin->givePermissionTo('read role');
             $role_admin->givePermissionTo('create role');
             $role_admin->givePermissionTo('update role');
             $role_admin->givePermissionTo('delete role');
+            $role_admin->givePermissionTo('read konfigurasi');
     
             $staff->assignRole('staff');
             $admin->assignRole('admin');

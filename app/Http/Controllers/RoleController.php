@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
@@ -11,13 +12,20 @@ class RoleController extends Controller
      */
 
     public function __construct() {
+        // $this->middleware('auth');
         $this->middleware('can:read role');
+        // if(!Gate::allows('read role')){
+        //     abort(404);
+        // }
     }
 
     public function index()
     {
         //
-        // $this->authorize('read role');
+        $this->authorize('read role');
+        // if(!Gate::allows('read role')){
+        //     abort(404);
+        // }
         return view('roles.index');
     }
 
@@ -30,6 +38,14 @@ class RoleController extends Controller
         $this->authorize('read role');
         return 'create page';
     }
+
+    
+    // public function create2()
+    // {
+    //     ////tidak kebaca di route resource
+    //     $this->authorize('read role');
+    //     return 'haha page';
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -47,6 +63,7 @@ class RoleController extends Controller
     public function show(string $id)
     {
         //menampilkan
+        $this->authorize('create role');
         return "show by id";
     }
 
