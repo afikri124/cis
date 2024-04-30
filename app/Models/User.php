@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'gender'
     ];
 
     /**
@@ -46,7 +48,7 @@ class User extends Authenticatable
     function image()
     { 
       $has_valid_avatar = false;
-      // if(env('APP_ENV') != 'local'){
+      if(env('APP_ENV') != 'local'){
         $hash = md5(strtolower(trim($this->email)));
         // $uri = "https://klas2.jgu.ac.id/sso/getImage.php?id=".$this->username;
         $uri = "https://klas2.jgu.ac.id/sso/image.php?id=".$this->username;
@@ -60,7 +62,7 @@ class User extends Authenticatable
             $has_valid_avatar = true;
           }
         }
-      // }
+      }
 
       if($has_valid_avatar){
         return $uri;

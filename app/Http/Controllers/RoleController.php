@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Models\User;
 
 class RoleController extends Controller
 {
@@ -17,6 +18,14 @@ class RoleController extends Controller
         // if(!Gate::allows('read role')){
         //     abort(404);
         // }
+    }
+
+    public function test()
+    {
+        //
+        $user = User::find("1");
+        $test = $user->syncRoles(['staff','admin']);
+        var_dump($test);
     }
 
     public function index()

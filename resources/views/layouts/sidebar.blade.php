@@ -14,25 +14,45 @@
     <div class="menu-inner-shadow"></div>
     <ul class="menu-inner py-1">
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Tes</span>
+            <span class="menu-header-text">Main Menu</span>
         </li>
         <li class="menu-item {{ request()->segment(1) == 'dashboard' ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Dashboards">Halaman Utama</div>
+                <div data-i18n="Dashboards">Dashboard</div>
             </a>
         </li>
         @can('read konfigurasi')
-        <li class="menu-item {{ request()->segment(1) == 'konfigurasi' ? 'open active' : '' }}">
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Control Panel</span>
+        </li>
+        <li class="menu-item {{ request()->segment(1) == 'setting' ? 'open active' : '' }}">
             <a href="#" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Account">Konfigurasi</div>
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div>Settings</div>
             </a>
             <ul class="menu-sub">
+                <li class="menu-item {{ request()->segment(2) == 'manage_account' ? 'open active' : '' }}">
+                    <a href="" class="menu-link menu-toggle">
+                        <div>Manage Account</div>
+                    </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item {{ request()->segment(3) == 'users' ? 'active' : '' }}">
+                            <a href="{{ route('users.index') }}" class="menu-link">
+                                <div>Users</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ request()->segment(3) == 'roles' ? 'active' : '' }}">
+                            <a href="{{ route('roles.index') }}" class="menu-link">
+                                <div>Roles</div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 @can('read role')
                 <li class="menu-item {{ request()->segment(2) == 'roles' ? 'active' : '' }}">
                     <a href="{{ route('roles.index') }}" class="menu-link">
-                        <div>Roles</div>
+                        <div>Test</div>
                     </a>
                 </li>
                 @endcan
@@ -43,18 +63,6 @@
                     </a>
                 </li>
                 @endcan
-                <li class="menu-item ">
-                    <a href="" class="menu-link menu-toggle">
-                        <div>tampil menu</div>
-                    </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item ">
-                            <a href="" class="menu-link">
-                                <div>tampil sub-menu3</div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </li>
         @endcan

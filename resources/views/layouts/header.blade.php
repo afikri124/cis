@@ -17,7 +17,30 @@
         </div>
         <!-- /Search -->
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-
+            <!-- Style Switcher -->
+          <li class="nav-item dropdown-style-switcher dropdown me-2 me-xl-0">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <i class='bx bx-sm'></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
+                  <span class="align-middle"><i class='bx bx-sun me-2'></i>Light</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
+                  <span class="align-middle"><i class="bx bx-moon me-2"></i>Dark</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
+                  <span class="align-middle"><i class="bx bx-desktop me-2"></i>System</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- / Style Switcher-->
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="" data-bs-toggle="dropdown">
@@ -47,13 +70,13 @@
                         <a class="dropdown-item {{ Route::currentRouteName()=='profile.edit' ? 'active' : '' }}"
                             href="{{ route('profile.edit') }}">
                             <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">Profil Saya</span>
+                            <span class="align-middle">My Profile</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" target="_blank" href="https://wa.me/6285159211558">
+                        <a class="dropdown-item" target="_blank" href="https://wa.me/+62881082124678">
                             <i class="bx bx-support me-2"></i>
-                            <span class="align-middle">Bantuan</span>
+                            <span class="align-middle">Support</span>
                         </a>
                     </li>
                     <li>
@@ -63,7 +86,7 @@
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                        document.getElementById('logout-form').submit();">
                             <i class="bx bx-power-off me-2"></i>
-                            <span class="align-middle">Keluar</span>
+                            <span class="align-middle">Logout</span>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
