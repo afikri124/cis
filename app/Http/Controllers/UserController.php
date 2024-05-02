@@ -38,7 +38,7 @@ class UserController extends Controller
                 'roles'=> ['required']
             ]);
             //memasukkan data ke database
-            $data=User::create([
+            $data = User::create([
                 'username' => $request->username,
                 'name' => $request->name,
                 'email' => $request->email,
@@ -50,7 +50,7 @@ class UserController extends Controller
             //memeberikan roles ke user
             $data->assignRole($request->roles); 
             //kembali ke halaman index
-            return redirect()->route('users.index')->with('msg','User '.$request->name.' successfully added!');
+            return redirect()->route('users.index')->with('msg','User "'.$request->name.'" successfully added!');
         }
         //variabel digunakan untuk pilihan Roles
         $roles = Role::get();
@@ -59,7 +59,11 @@ class UserController extends Controller
 
     public function data(Request $request)
     {
-        $data = User::with('roles')->select('*')->orderByDesc("id");
+        $data = User::
+            with(['roles' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->select('*')->orderBy("name");
             return Datatables::of($data)
                 ->filter(function ($instance) use ($request) {
                     //jika pengguna memfilter berdasarkan roles
@@ -74,8 +78,12 @@ class UserController extends Controller
                     }
                     //jika pengguna memfilter menggunakan pencarian
                     if (!empty($request->get('search'))) {
-                        $search = $request->get('search');
-                        $instance->where('name', 'LIKE', "%$search%");
+                        $instance->where(function($w) use($request){
+                            $search = $request->get('search');
+                                $w->orWhere('username', 'LIKE', "%$search%")
+                                ->orWhere('name', 'LIKE', "%$search%")
+                                ->orWhere('email', 'LIKE', "%$search%");
+                        });
                     }
                 })
                 ->addColumn('idd', function($x){

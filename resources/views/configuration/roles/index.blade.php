@@ -3,7 +3,7 @@
 <span class="text-muted fw-light">Setting /</span>
 <span class="text-muted fw-light">Manage Account /</span>
 @endsection
-@section('title', 'Users')
+@section('title', 'Roles')
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}">
@@ -20,16 +20,8 @@
         vertical-align: middle;
     }
 
-    table.dataTable td:nth-child(2) {
-        max-width: 100px;
-    }
-
-    table.dataTable td:nth-child(3) {
-        max-width: 80px;
-    }
-
-    table.dataTable td:nth-child(4) {
-        max-width: 80px;
+    table.dataTable tbody td {
+        vertical-align: middle;
     }
 
     table.dataTable td {
@@ -51,21 +43,15 @@
                     <div class="col-12">
                         <div class="row">
                             <div class=" col-md-3">
-                                <select id="select_role" class="select2 form-select" data-placeholder="Roles">
-                                    <option value="">Roles</option>
-                                    @foreach($roles as $d)
-                                    <option value="{{ $d->id }}">{{ $d->name }}</option>
+                                <select id="select_guard_name" class="select2 form-select"
+                                    data-placeholder="Guard Name">
+                                    <option value="">Guard Name</option>
+                                    @foreach($guard_names as $d)
+                                    <option value="{{ $d->guard_name }}">{{ $d->guard_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class=" col-md-3">
-                                <select id="select_gender" class="select2 form-select" data-placeholder="Gender">
-                                    <option value="">Gender</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                            </div>
-                            <div class="offset-md-3 col-md-3 text-md-end text-center pt-3 pt-md-0">
+                            <div class="offset-md-6 col-md-3 text-md-end text-center pt-3 pt-md-0">
                                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#newrecord" aria-controls="offcanvasEnd" tabindex="0"
                                     aria-controls="DataTables_Table_0" type="button"><span><i
@@ -80,7 +66,7 @@
             <div class="offcanvas offcanvas-end @if($errors->all()) show @endif" tabindex="-1" id="newrecord"
                 aria-labelledby="offcanvasEndLabel">
                 <div class="offcanvas-header">
-                    <h5 id="offcanvasEndLabel" class="offcanvas-title">Add User</h5>
+                    <h5 id="offcanvasEndLabel" class="offcanvas-title">Add Role</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                         aria-label="Close"></button>
                 </div>
@@ -89,22 +75,10 @@
                         id="form-add-new-record" method="POST" action="">
                         @csrf
                         <div class="col-sm-12 fv-plugins-icon-container">
-                            <label class="form-label" for="basicDate">Username</label>
-                            <div class="input-group input-group-merge has-validation">
-                                <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                    name="username" id="nik" placeholder="Username" value="{{ old('username') }}">
-                                @error('username')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-sm-12 fv-plugins-icon-container">
                             <label class="form-label" for="basicDate">Name</label>
                             <div class="input-group input-group-merge has-validation">
                                 <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                    placeholder="Name" value="{{ old('name') }}">
+                                    id="name" placeholder="Name" value="{{ old('name') }}">
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -113,72 +87,14 @@
                             </div>
                         </div>
                         <div class="col-sm-12 fv-plugins-icon-container">
-                            <label class="form-label" for="basicDate">Email</label>
+                            <label class="form-label" for="basicDate">Guard Name</label>
                             <div class="input-group input-group-merge has-validation">
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" placeholder="Email" value="{{ old('email') }}" maxlength="24">
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-sm-12 fv-plugins-icon-container">
-                            <label class="form-label" for="basicDate">Gender</label>
-                            <div class="input-group input-group-merge has-validation">
-                                <select class="form-select @error('gender') is-invalid @enderror select2-modal"
-                                    name="gender" data-placeholder="-- Select --">
-                                    <option value="">-- Select --</option>
-                                    <option value="M" {{ ("M"==old('gender') ? "selected": "") }}>Male</option>
-                                    <option value="F" {{ ("F"==old('gender') ? "selected": "") }}>Female</option>
-                                </select>
-                                @error('gender')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-sm-12 fv-plugins-icon-container form-password-toggle">
-                            <label class="form-label" for="basicDate">New Password</label>
-                            <div class="input-group input-group-merge has-validation">
-                                <input type="password" class="form-control @error('new_password') is-invalid @enderror"
-                                    name="new_password" id="new_password" placeholder="New Password"
-                                    value="{{ old('new_password') }}">
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                @error('new_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-sm-12 fv-plugins-icon-container form-password-toggle">
-                            <label class="form-label" for="basicDate">Confirm Password</label>
-                            <div class="input-group input-group-merge has-validation">
-                                <input type="password"
-                                    class="form-control @error('confirm_password') is-invalid @enderror"
-                                    name="confirm_password" id="confirm_password" placeholder="Confirm Password"
-                                    value="{{ old('confirm_password') }}" aria-describedby="confirm_password" />
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                                @error('confirm_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-sm-12 fv-plugins-icon-container">
-                            <label class="form-label" for="basicDate">Roles</label>
-                            <div class="input-group input-group-merge has-validation">
-                                <select class="form-select @error('roles') is-invalid @enderror select2-modal"
-                                    multiple="multiple" name="roles[]" id="select2Dark"
-                                    data-placeholder=" -- Select --">
-                                    @foreach($roles as $role)
-                                    <option value="{{$role->id}}"
-                                        {{ (in_array($role->id, old('roles') ?? []) ? "selected": "") }}>
-                                        {{$role->name}}</option>
+                                <select class="form-select @error('guard_name') is-invalid @enderror select2-modal"
+                                    name="guard_name" id="select2Dark" data-placeholder=" -- Select --">
+                                    @foreach($guard_names as $d)
+                                    <option value="{{$d->guard_name}}"
+                                        {{ $d->id == old('guard_name') ? "selected": "" }}>
+                                        {{$d->guard_name}}</option>
                                     @endforeach
                                 </select>
                                 @error('roles')
@@ -204,10 +120,8 @@
                 <tr>
                     <th width="20px" data-priority="1">No</th>
                     <th data-priority="2">Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Roles</th>
+                    <th width="100px">Guard Name</th>
+                    <th width="150px">Total Permissions</th>
                     <th width="40px" data-priority="3">Actions</th>
                 </tr>
             </thead>
@@ -266,17 +180,15 @@
             processing: true,
             serverSide: true,
             ordering: false,
-            searching: true,
             language: {
                 searchPlaceholder: 'Search..',
                 // url: "{{asset('assets/vendor/libs/datatables/id.json')}}"
             },
             ajax: {
-                url: "{{ route('users.data') }}",
+                url: "{{ route('roles.data') }}",
                 data: function (d) {
-                    d.select_role = $('#select_role').val(),
-                    d.select_gender = $('#select_gender').val(),
-                    d.search = $('#datatable_filter input[type="search"]').val()
+                    d.select_guard_name = $('#select_guard_name').val(),
+                        d.search = $('#datatable_filter input[type="search"]').val()
                 },
             },
             columnDefs: [{
@@ -293,59 +205,27 @@
                 {
                     render: function (data, type, row, meta) {
                         var html = `<a class="text-primary" title="` + row.name +
-                            `" href="{{ url('setting/manage_account/users/edit/` +
+                            `" href="{{ url('setting/manage_account/roles/edit/` +
                             row.idd + `') }}">` + row.name + `</a>`;
                         return html;
                     },
                 },
                 {
                     render: function (data, type, row, meta) {
-                        var html = "<code><span title='" + row.username + "'>" + row.username +
-                            "</span></code>";
-                        return html;
+                        return row.guard_name;
                     },
                 },
                 {
                     render: function (data, type, row, meta) {
-                        var html = "<span title='" + row.email + "'>" + row.email +
-                            "</span>";
-                        return html;
-                    },
-                },
-
-                {
-                    render: function (data, type, row, meta) {
-                        if (row.gender != null) {
-                            return "<span title='" + row.gender + "'>" + row.gender + "</span>";
-                        }
-
-                    },
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        var x =
-                            '<ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">';
-                        if (row.roles != null) {
-                            row.roles.forEach((e) => {
-                                x += '<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="' +
-                                    e.name +
-                                    '"><i class="badge rounded-pill bg-secondary"  style="font-size:8pt;">' +
-                                    e.name +
-                                    '</i></li>';
-                            });
-                        }
-                        var y = "</ul>";
-                        return x + y;
+                        return row.permissions.length;
                     },
                 },
                 {
                     render: function (data, type, row, meta) {
                         var html =
-                            `<a class=" text-info" title="Reset Password" href="{{ url('setting/manage_account/users/reset_password/` +
-                            row.idd + `') }}"><i class="bx bxs-lock-open"></i></a>
-                            <a class=" text-success" title="Edit" href="{{ url('setting/manage_account/users/edit/` +
+                            `<a class=" text-success" title="Edit" href="{{ url('setting/manage_account/roles/edit/` +
                             row.idd + `') }}"><i class="bx bxs-edit"></i></a>`;
-                        if ("{{Auth::user()->id}}" == row.id) {
+                        if ("admin" == row.name) {
                             html +=
                                 ` <a class=" text-light" title="Delete" style="cursor:not-allowed"><i class="bx bx-trash"></i></a>`;
                         } else {
@@ -360,10 +240,7 @@
                 }
             ]
         });
-        $('#select_role').change(function () {
-            table.draw();
-        });
-        $('#select_gender').change(function () {
+        $('#select_guard_name').change(function () {
             table.draw();
         });
     });
@@ -379,7 +256,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: "{{ route('users.delete') }}",
+                        url: "{{ route('roles.destroy') }}",
                         type: "DELETE",
                         data: {
                             "id": id,

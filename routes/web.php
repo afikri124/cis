@@ -43,7 +43,7 @@ Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::cl
 
 
 Route::group(['prefix' => 'setting','middleware' => ['auth']],function () {
-    Route::resource('roles', RoleController::class); 
+    // Route::resource('roles', RoleController::class); 
 
     Route::group(['prefix' => 'manage_account'], function () {
         Route::group(['prefix' => 'users'], function () { //route to manage users
@@ -57,7 +57,7 @@ Route::group(['prefix' => 'setting','middleware' => ['auth']],function () {
             Route::any('/', [RoleController::class, 'index'])->name('roles.index');
             Route::get('/data', [RoleController::class, 'data'])->name('roles.data');
             Route::any('/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
-            Route::delete('/delete', [RoleController::class, 'delete'])->name('roles.delete');
+            Route::delete('/destroy', [RoleController::class, 'destroy'])->name('roles.destroy');
         });
     });
 });
