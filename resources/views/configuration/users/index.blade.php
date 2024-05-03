@@ -204,11 +204,11 @@
                 <tr>
                     <th width="20px" data-priority="1">No</th>
                     <th data-priority="2">Name</th>
-                    <th>Username</th>
+                    <th width="40px">Username</th>
                     <th>Email</th>
-                    <th>Gender</th>
+                    <th width="40px">Gender</th>
                     <th>Roles</th>
-                    <th width="40px" data-priority="3">Actions</th>
+                    <th width="40px" data-priority="3">Action</th>
                 </tr>
             </thead>
         </table>
@@ -329,7 +329,7 @@
                             row.roles.forEach((e) => {
                                 x += '<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="' +
                                     e.name +
-                                    '"><i class="badge rounded-pill bg-secondary"  style="font-size:8pt;">' +
+                                    '"><i class="badge rounded-pill"  style="font-size:8pt;background-color:'+e.color+'">' +
                                     e.name +
                                     '</i></li>';
                             });

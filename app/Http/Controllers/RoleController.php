@@ -13,6 +13,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Permission\Contracts\Role as ContractsRole;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Contracts\Permission as ContractsPermission;
+use Spatie\Permission\Models\Permission;
 use Carbon\Carbon;
 use App\Models\User;
 use DB;
@@ -51,21 +53,27 @@ class RoleController extends Controller
             //memasukkan data ke database
             $data = Role::create([
                 'name' => $request->name,
-                'guard_name' => $request->guard_name
+                'guard_name' => $request->guard_name,
+                'color'=> $request->color,
+                'description'=> $request->description
             ]);
             //kembali ke halaman index
             return redirect()->route('roles.index')->with('msg','Role "'.$request->name.'" successfully added!');
         }
-        //variabel digunakan untuk pilihan Roles
+        //variabel digunakan untuk pilihan
+        $permissions = Permission::get();
         $guard_names = Role::select('guard_name')->groupBy('guard_name')->get();
-        return view('configuration.roles.index', compact('guard_names'));
+        return view('configuration.roles.index', compact('guard_names', 'permissions'));
     }
 
     public function data(Request $request)
     {
         $data = Role::
             with(['permissions' => function ($query) {
-                $query->select('id', 'name');
+                $query->select('id');
+            }])
+            ->with(['users' => function ($query) {
+                $query->select('id');
             }])
             ->select('*')->orderBy("name");
             return Datatables::of($data)
@@ -73,6 +81,12 @@ class RoleController extends Controller
                     //jika pengguna memfilter berdasarkan guard_name
                     if (!empty($request->get('select_guard_name'))) {
                         $instance->where('guard_name', $request->get('select_guard_name'));
+                    }
+                    //jika pengguna memfilter berdasarkan permission
+                    if (!empty($request->get('select_permission'))) {
+                        $instance->whereHas('permissions', function($q) use($request){
+                            $q->where('permission_id', $request->get('select_permission'));
+                        });
                     }
                     //jika pengguna memfilter menggunakan pencarian
                     if (!empty($request->get('search'))) {
@@ -121,11 +135,40 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($idd, Request $request)
     {
         //menampilkan edit
         $this->authorize('update role');
-        return "edit by id";
+        //mencoba mendeskripsikan idd menjadi id
+        try {
+            $id = Crypt::decrypt($idd);
+        } catch (DecryptException $e) {
+            return redirect()->route('roles.index');
+        }
+        //jika menerima method post dari form
+        if ($request->isMethod('post')) {
+            $this->validate($request, [ 
+                'name' => ['required', 'string'],
+                'guard_name' => ['required', 'string'],
+            ]);
+            //mengubah data di database
+            Role::where('id', $id)->update([
+                'name'=> $request->name,
+                'guard_name'=> $request->guard_name,
+                'color'=> $request->color,
+                'description'=> $request->description,
+                'updated_at' => Carbon::now()
+            ]);
+            //mencatat perubahan di log
+            Log::info(Auth::user()->name." update Role #".$id.", ".$request->name);
+            //kembali ke halaman edit dengan pesan notifikasi
+            return redirect()->route('roles.edit', ['id'=>$idd])->with('msg','Role '.$request->name.' updated successfully!');
+        }
+        //mencari data user berdasarkan id
+        $data = Role::find($id);
+        //variabel digunakan untuk pilihan guard
+        $guard_names = Role::select('guard_name')->groupBy('guard_name')->get();
+        return view('configuration.roles.edit', compact('data','guard_names'));
     }
 
     /**

@@ -51,7 +51,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="offset-md-6 col-md-3 text-md-end text-center pt-3 pt-md-0">
+                            <div class=" col-md-3">
+                                <select id="select_permission" class="select2 form-select"
+                                    data-placeholder="Permissions">
+                                    <option value="">Permissions</option>
+                                    @foreach($permissions as $d)
+                                    <option value="{{ $d->id }}">{{ $d->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="offset-md-3 col-md-3 text-md-end text-center pt-3 pt-md-0">
                                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#newrecord" aria-controls="offcanvasEnd" tabindex="0"
                                     aria-controls="DataTables_Table_0" type="button"><span><i
@@ -97,7 +106,31 @@
                                         {{$d->guard_name}}</option>
                                     @endforeach
                                 </select>
-                                @error('roles')
+                                @error('guard_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-sm-12 fv-plugins-icon-container">
+                            <label class="form-label" for="basicDate">Description</label>
+                            <div class="input-group input-group-merge has-validation">
+                                <input type="text" class="form-control @error('description') is-invalid @enderror" name="description"
+                                    id="description" placeholder="Description" value="{{ old('description') }}">
+                                @error('description')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-sm-12 fv-plugins-icon-container">
+                            <label class="form-label" for="basicDate">Color</label>
+                            <div class="input-group input-group-merge has-validation">
+                                <input type="color" class="form-control form-control-color  @error('color') is-invalid @enderror" name="color"
+                                    id="color" placeholder="Color" value="{{ old('color') != null ? old('color') : '#ff0000' }}">
+                                @error('color')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -120,9 +153,12 @@
                 <tr>
                     <th width="20px" data-priority="1">No</th>
                     <th data-priority="2">Name</th>
+                    <th >Description</th>
+                    <th width="40px">Color</th>
                     <th width="100px">Guard Name</th>
+                    <th width="120px">Total Users</th>
                     <th width="150px">Total Permissions</th>
-                    <th width="40px" data-priority="3">Actions</th>
+                    <th width="40px" data-priority="3">Action</th>
                 </tr>
             </thead>
         </table>
@@ -188,6 +224,7 @@
                 url: "{{ route('roles.data') }}",
                 data: function (d) {
                     d.select_guard_name = $('#select_guard_name').val(),
+                    d.select_permission = $('#select_permission').val(),
                         d.search = $('#datatable_filter input[type="search"]').val()
                 },
             },
@@ -212,7 +249,22 @@
                 },
                 {
                     render: function (data, type, row, meta) {
+                        return row.description;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return '<code class="badge" style="font-size:8pt;background-color:'+row.color+'">' + row.color + '</code>';
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
                         return row.guard_name;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return row.users.length;
                     },
                 },
                 {
@@ -241,6 +293,9 @@
             ]
         });
         $('#select_guard_name').change(function () {
+            table.draw();
+        });
+        $('#select_permission').change(function () {
             table.draw();
         });
     });

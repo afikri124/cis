@@ -61,7 +61,7 @@ class UserController extends Controller
     {
         $data = User::
             with(['roles' => function ($query) {
-                $query->select('id', 'name');
+                $query->select('id', 'name', 'color');
             }])
             ->select('*')->orderBy("name");
             return Datatables::of($data)

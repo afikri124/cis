@@ -47,6 +47,11 @@
                                 <div>Roles</div>
                             </a>
                         </li>
+                        <li class="menu-item {{ request()->segment(3) == 'permissions' ? 'active' : '' }}">
+                            <a href="{{ route('permissions.index') }}" class="menu-link">
+                                <div>Permissions</div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @can('read role')

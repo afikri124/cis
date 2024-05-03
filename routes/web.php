@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,6 +59,10 @@ Route::group(['prefix' => 'setting','middleware' => ['auth']],function () {
             Route::get('/data', [RoleController::class, 'data'])->name('roles.data');
             Route::any('/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
             Route::delete('/destroy', [RoleController::class, 'destroy'])->name('roles.destroy');
+        });
+        Route::group(['prefix' => 'permissions'], function () { //route to manage permissions
+            Route::any('/', [PermissionController::class, 'index'])->name('permissions.index');
+            Route::get('/data', [PermissionController::class, 'data'])->name('permissions.data');
         });
     });
 });

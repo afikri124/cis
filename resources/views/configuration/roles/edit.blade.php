@@ -2,9 +2,9 @@
 @section('breadcrumb-items')
 <span class="text-muted fw-light">Setting /</span>
 <span class="text-muted fw-light">Manage Account /</span>
-<span class="text-muted fw-light">Users /</span>
+<span class="text-muted fw-light">Roles /</span>
 @endsection
-@section('title', $data->username)
+@section('title', $data->name)
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}">
@@ -32,8 +32,8 @@
         </div>
         @endif
         <div class="card mb-4">
-            <h5 class="card-header"><img src="{{ $data->image() }}" class="w-40 h-40 rounded-circle" style="width:40px; height:40px;object-fit: cover; margin-right:10px;">
-            Update Account
+            <h5 class="card-header">
+            Update Role
             </h5>
             <!-- Account -->
             <hr class="my-0">
@@ -51,56 +51,46 @@
                             </span>
                             @enderror
                         </div>
-
                         <div class="mb-3 col-md-6">
-                            <label for="user" class="form-label">Username</label>
-                            <input type="username" class="form-control @error('username') is-invalid @enderror"
-                                id="user" name="username" value="{{ $data->username  }}"
-                                placeholder="Username" />
-                            @error('username')
+                            <label for="color" class="form-label">Color</label>
+                            <input type="color" class="form-control form-control-color @error('color') is-invalid @enderror" id="color"
+                                name="color" value="{{ $data->color }}"  />
+                            @error('color')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="mb-3 col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                                name="email" value="{{ (old('email') == null ? $data->email : old('email')) }}" placeholder="Email"  />
-                            @error('email')
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control @error('description') is-invalid @enderror" id="description"
+                                name="description" value="{{ $data->description }}"  />
+                            @error('description')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
                         </div>
                         <div class="mb-3 col-md-6">
-                            <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select @error('gender') is-invalid @enderror select2"
-                                    name="gender" data-placeholder="-- Select --">
+                            <label for="guard_name" class="form-label">Guard Names</label>
+                            <select class="form-select @error('guard_name') is-invalid @enderror select2"
+                                    name="guard_name" data-placeholder="-- Select --">
                                     <option value="">-- Select --</option>
-                                    <option value="M" {{ ("M"==$data->gender ? "selected": "") }}>Male</option>
-                                    <option value="F" {{ ("F"==$data->gender ? "selected": "") }}>Female</option>
+                                    @foreach($guard_names as $d)
+                                    <option value="{{$d->guard_name}}" {{ $d->guard_name == $data->guard_name ? 'selected' : '' }}>
+                                        {{$d->guard_name}}</option>
+                                    @endforeach
                             </select>
-                            @error('gender')
+                            @error('guard_name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
-                        </div>
-
-                        <div class="mb-3 col-md-12">
-                            <label class="form-label">Roles</label>
-                            <select class="select2 form-select" multiple="multiple" name="roles[]" id="select2Dark">
-                                @foreach($roles as $role)
-                                <option value="{{$role->id}}" {{ $data->hasRole($role->id) ? 'selected' : '' }}>
-                                    {{$role->name}}</option>
-                                @endforeach
-                            </select>
                         </div>
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>
-                        <a class="btn btn-outline-secondary" href="{{ route('users.index') }}">Back</a>
+                        <a class="btn btn-outline-secondary" href="{{ route('roles.index') }}">Back</a>
                     </div>
                 </form>
             </div>
