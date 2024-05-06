@@ -31,21 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    //Test
-    Route::get('/test', [RoleController::class, 'test'])->name('test');
 });
 
-Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware(['auth']);
-
-// Route::controller(RoleController::class)->group(function(){
-//     Route::get('/roles', 'index')->middleware('can:read role');
-//     Route::get('/roles/create', 'create')->middleware('can:create role');
-// });
-
+Route::get('log-viewers', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->middleware(['can:log-viewers.read']);
 
 Route::group(['prefix' => 'setting','middleware' => ['auth']],function () {
-    // Route::resource('roles', RoleController::class); 
-
     Route::group(['prefix' => 'manage_account'], function () {
         Route::group(['prefix' => 'users'], function () { //route to manage users
             Route::any('/', [UserController::class, 'index'])->name('users.index');

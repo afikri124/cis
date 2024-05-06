@@ -27,34 +27,22 @@ class UserRolePermissionSeeder extends Seeder
         // try {
             $admin = User::create(array_merge([
                 'email' => 'no-reply@jgu.ac.id',
-                'name' => 'admin',
+                'name' => 'Admin',
                 'username' => 'admin',
             ], $default_user_value));
 
             $staff = User::create(array_merge([
                 'email' => 'afikri124@gmail.com',
-                'name' => 'staff',
+                'name' => 'Staff',
                 'username' => 'staff',
             ], $default_user_value));
     
     
-            $role_admin = Role::create(['name' => 'admin']);
-            $role_staff = Role::create(['name' => 'staff']);
+            $role_admin = Role::create(['name' => 'admin', 'color' => '#000000', 'description' => 'Administrator']);
+            $role_staff = Role::create(['name' => 'staff', 'color' => '#ff0000', 'description' => 'Staff only']);
     
             $staff->assignRole('staff');
             $admin->assignRole('admin');
-
-            $permission = Permission::create(['name' => 'read role']);
-            $permission = Permission::create(['name' => 'create role']);
-            $permission = Permission::create(['name' => 'update role']);
-            $permission = Permission::create(['name' => 'delete role']);
-            Permission::create(['name' => 'read konfigurasi']);
-
-            $role_admin->givePermissionTo('read role');
-            $role_admin->givePermissionTo('create role');
-            $role_admin->givePermissionTo('update role');
-            $role_admin->givePermissionTo('delete role');
-            $role_admin->givePermissionTo('read konfigurasi');
 
         //     DB::commit();
         // } catch (\Throwable $th) {

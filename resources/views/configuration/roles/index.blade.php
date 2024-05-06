@@ -51,7 +51,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class=" col-md-3">
+                            <div class=" col-md-4">
                                 <select id="select_permission" class="select2 form-select"
                                     data-placeholder="Permissions">
                                     <option value="">Permissions</option>
@@ -60,18 +60,21 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="offset-md-3 col-md-3 text-md-end text-center pt-3 pt-md-0">
+                            <div class="offset-md-2 col-md-3 text-md-end text-center pt-3 pt-md-0">
+                                @can('setting/manage_account/roles.create')
                                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#newrecord" aria-controls="offcanvasEnd" tabindex="0"
                                     aria-controls="DataTables_Table_0" type="button"><span><i
                                             class="bx bx-plus me-sm-2"></i>
                                         <span>Add</span></span>
                                 </button>
+                                @endcan
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @can('setting/manage_account/roles.create')
             <div class="offcanvas offcanvas-end @if($errors->all()) show @endif" tabindex="-1" id="newrecord"
                 aria-labelledby="offcanvasEndLabel">
                 <div class="offcanvas-header">
@@ -147,6 +150,7 @@
 
                 </div>
             </div>
+            @endcan
         </div>
         <table class="table table-hover table-sm" id="datatable" width="100%">
             <thead>
@@ -154,10 +158,10 @@
                     <th width="20px" data-priority="1">No</th>
                     <th data-priority="2">Name</th>
                     <th >Description</th>
-                    <th width="40px">Color</th>
+                    <th width="50px" data-priority="4">Color</th>
                     <th width="100px">Guard Name</th>
-                    <th width="120px">Total Users</th>
-                    <th width="150px">Total Permissions</th>
+                    <th width="100px">Users</th>
+                    <th width="100px">Permissions</th>
                     <th width="40px" data-priority="3">Action</th>
                 </tr>
             </thead>
@@ -256,27 +260,34 @@
                     render: function (data, type, row, meta) {
                         return '<code class="badge" style="font-size:8pt;background-color:'+row.color+'">' + row.color + '</code>';
                     },
+                    className: "text-md-center"
                 },
                 {
                     render: function (data, type, row, meta) {
                         return row.guard_name;
                     },
+                    className: "text-md-center"
                 },
                 {
                     render: function (data, type, row, meta) {
                         return row.users.length;
                     },
+                    className: "text-md-center"
                 },
                 {
                     render: function (data, type, row, meta) {
                         return row.permissions.length;
                     },
+                    className: "text-md-center"
                 },
                 {
                     render: function (data, type, row, meta) {
-                        var html =
-                            `<a class=" text-success" title="Edit" href="{{ url('setting/manage_account/roles/edit/` +
+                        var html = "";
+                        @can('setting/manage_account/roles.update')
+                        html += `<a class=" text-success" title="Edit" href="{{ url('setting/manage_account/roles/edit/` +
                             row.idd + `') }}"><i class="bx bxs-edit"></i></a>`;
+                        @endcan
+                        @can('setting/manage_account/roles.delete')
                         if ("admin" == row.name) {
                             html +=
                                 ` <a class=" text-light" title="Delete" style="cursor:not-allowed"><i class="bx bx-trash"></i></a>`;
@@ -286,6 +297,7 @@
                                 row
                                 .id + `)" ><i class="bx bx-trash"></i></a>`;
                         }
+                        @endcan
                         return html;
                     },
                     className: "text-center"

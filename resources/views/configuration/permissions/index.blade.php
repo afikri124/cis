@@ -72,7 +72,7 @@
                     {{-- <th width="30px">ID</th> --}}
                     <th data-priority="2">Name</th>
                     <th width="100px">Guard Name</th>
-                    <th width="100px">Total Roles</th>
+                    <th width="100px">Roles</th>
                 </tr>
             </thead>
         </table>
@@ -169,11 +169,13 @@
                     render: function (data, type, row, meta) {
                         return row.guard_name;
                     },
+                    className: "text-md-center"
                 },
                 {
                     render: function (data, type, row, meta) {
                         return row.roles.length;
                     },
+                    className: "text-md-center"
                 }
             ]
         });

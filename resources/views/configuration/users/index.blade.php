@@ -66,17 +66,20 @@
                                 </select>
                             </div>
                             <div class="offset-md-3 col-md-3 text-md-end text-center pt-3 pt-md-0">
+                                @can('setting/manage_account/users.create')
                                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
                                     data-bs-target="#newrecord" aria-controls="offcanvasEnd" tabindex="0"
                                     aria-controls="DataTables_Table_0" type="button"><span><i
                                             class="bx bx-plus me-sm-2"></i>
                                         <span>Add</span></span>
                                 </button>
+                                @endcan
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @can('setting/manage_account/users.create')
             <div class="offcanvas offcanvas-end @if($errors->all()) show @endif" tabindex="-1" id="newrecord"
                 aria-labelledby="offcanvasEndLabel">
                 <div class="offcanvas-header">
@@ -198,6 +201,7 @@
 
                 </div>
             </div>
+            @endcan
         </div>
         <table class="table table-hover table-sm" id="datatable" width="100%">
             <thead>
@@ -226,7 +230,7 @@
 <script src="{{asset('assets/vendor/libs/datatables/buttons.bootstrap5.js')}}"></script>
 <script src="{{asset('assets/js/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
-@if(session('msg')) 
+@if(session('msg'))
 <script type="text/javascript">
     //swall message notification
     $(document).ready(function () {
@@ -234,6 +238,7 @@
             icon: "info",
         });
     });
+
 </script>
 @endif
 <script>
@@ -275,8 +280,8 @@
                 url: "{{ route('users.data') }}",
                 data: function (d) {
                     d.select_role = $('#select_role').val(),
-                    d.select_gender = $('#select_gender').val(),
-                    d.search = $('#datatable_filter input[type="search"]').val()
+                        d.select_gender = $('#select_gender').val(),
+                        d.search = $('#datatable_filter input[type="search"]').val()
                 },
             },
             columnDefs: [{
@@ -329,7 +334,8 @@
                             row.roles.forEach((e) => {
                                 x += '<li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="' +
                                     e.name +
-                                    '"><i class="badge rounded-pill"  style="font-size:8pt;background-color:'+e.color+'">' +
+                                    '"><i class="badge rounded-pill"  style="font-size:8pt;background-color:' +
+                                    e.color + '">' +
                                     e.name +
                                     '</i></li>';
                             });
@@ -340,11 +346,18 @@
                 },
                 {
                     render: function (data, type, row, meta) {
-                        var html =
+                        var html = "";
+                        @can('setting/manage_account/users.reset-password')
+                        html +=
                             `<a class=" text-info" title="Reset Password" href="{{ url('setting/manage_account/users/reset_password/` +
-                            row.idd + `') }}"><i class="bx bxs-lock-open"></i></a>
-                            <a class=" text-success" title="Edit" href="{{ url('setting/manage_account/users/edit/` +
+                            row.idd + `') }}"><i class="bx bxs-lock-open"></i></a>`;
+                        @endcan
+                        @can('setting/manage_account/users.update')
+                        html +=
+                            `<a class=" text-success" title="Edit" href="{{ url('setting/manage_account/users/edit/` +
                             row.idd + `') }}"><i class="bx bxs-edit"></i></a>`;
+                        @endcan
+                        @can('setting/manage_account/users.delete')
                         if ("{{Auth::user()->id}}" == row.id) {
                             html +=
                                 ` <a class=" text-light" title="Delete" style="cursor:not-allowed"><i class="bx bx-trash"></i></a>`;
@@ -354,6 +367,7 @@
                                 row
                                 .id + `)" ><i class="bx bx-trash"></i></a>`;
                         }
+                        @endcan
                         return html;
                     },
                     className: "text-center"

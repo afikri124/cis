@@ -19,13 +19,13 @@ class UserController extends Controller
 {
     //
     public function __construct() {
-        // $this->middleware('auth');
-        // $this->middleware('can:read user');
+        $this->middleware('auth');
+        // $this->middleware('can:setting/manage_account/users.read');
     }
 
     public function index(Request $request)
     {
-        // $this->authorize('read user');
+        $this->authorize('setting/manage_account/users.read');
         if ($request->isMethod('post')) { //jika menerima method post dari form
             //validasi input form
             $this->validate($request, [ 
@@ -59,6 +59,7 @@ class UserController extends Controller
 
     public function data(Request $request)
     {
+        $this->authorize('setting/manage_account/users.read');
         $data = User::
             with(['roles' => function ($query) {
                 $query->select('id', 'name', 'color');
@@ -96,6 +97,7 @@ class UserController extends Controller
 
     public function edit ($idd, Request $request)
     {
+        $this->authorize('setting/manage_account/users.update');
         //mencoba mendeskripsikan idd menjadi id
         try {
             $id = Crypt::decrypt($idd);
@@ -135,6 +137,7 @@ class UserController extends Controller
     }
 
     public function delete(Request $request) {
+        $this->authorize('setting/manage_account/users.delete');
         //tidak memperbolehkan user menghapus dirinya sendiri
         if(Auth::user()->id == $request->id){
             return response()->json([
@@ -165,6 +168,7 @@ class UserController extends Controller
 
     protected function reset_password($idd, Request $request)
     {
+        $this->authorize('setting/manage_account/users.reset-password');
         //mencoba mendeskripsikan idd menjadi id
         try {
             $id = Crypt::decrypt($idd);

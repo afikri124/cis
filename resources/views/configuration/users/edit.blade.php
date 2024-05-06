@@ -44,7 +44,7 @@
                         <div class="mb-3 col-md-6">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                                name="name" value="{{ $data->name }}" autofocus />
+                                name="name" value="{{ $data->name }}" />
                             @error('name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

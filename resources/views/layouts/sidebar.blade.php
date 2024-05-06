@@ -22,50 +22,46 @@
                 <div data-i18n="Dashboards">Dashboard</div>
             </a>
         </li>
-        @can('read konfigurasi')
+        @can('control panel.read')
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Control Panel</span>
         </li>
+        @endcan
+        @can('setting.read')
         <li class="menu-item {{ request()->segment(1) == 'setting' ? 'open active' : '' }}">
             <a href="#" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div>Settings</div>
             </a>
             <ul class="menu-sub">
+                @can('setting/manage_account.read')
                 <li class="menu-item {{ request()->segment(2) == 'manage_account' ? 'open active' : '' }}">
                     <a href="" class="menu-link menu-toggle">
                         <div>Manage Account</div>
                     </a>
                     <ul class="menu-sub">
+                        @can('setting/manage_account/users.read')
                         <li class="menu-item {{ request()->segment(3) == 'users' ? 'active' : '' }}">
                             <a href="{{ route('users.index') }}" class="menu-link">
                                 <div>Users</div>
                             </a>
                         </li>
+                        @endcan
+                        @can('setting/manage_account/roles.read')
                         <li class="menu-item {{ request()->segment(3) == 'roles' ? 'active' : '' }}">
                             <a href="{{ route('roles.index') }}" class="menu-link">
                                 <div>Roles</div>
                             </a>
                         </li>
+                        @endcan
+                        @can('setting/manage_account/permissions.read')
                         <li class="menu-item {{ request()->segment(3) == 'permissions' ? 'active' : '' }}">
                             <a href="{{ route('permissions.index') }}" class="menu-link">
                                 <div>Permissions</div>
                             </a>
                         </li>
+                        @endcan
                     </ul>
-                </li>
-                @can('read role')
-                <li class="menu-item {{ request()->segment(2) == 'roles' ? 'active' : '' }}">
-                    <a href="{{ route('roles.index') }}" class="menu-link">
-                        <div>Test</div>
-                    </a>
-                </li>
-                @endcan
-                @can('read apa')
-                <li class="menu-item ">
-                    <a href="" class="menu-link">
-                        <div>Apa</div>
-                    </a>
                 </li>
                 @endcan
             </ul>
