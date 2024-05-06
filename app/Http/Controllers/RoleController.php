@@ -50,7 +50,7 @@ class RoleController extends Controller
             return redirect()->route('roles.index')->with('msg','Role "'.$request->name.'" successfully added!');
         }
         //variabel digunakan untuk pilihan
-        $permissions = Permission::get();
+        $permissions = Permission::orderBy('name')->get();
         $guard_names = Role::select('guard_name')->groupBy('guard_name')->get();
         return view('configuration.roles.index', compact('guard_names', 'permissions'));
     }

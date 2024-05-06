@@ -51,18 +51,18 @@
                     <div class="col-12">
                         <div class="row">
                             <div class=" col-md-3">
+                                <select id="select_gender" class="select2 form-select" data-placeholder="Gender">
+                                    <option value="">Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                            <div class=" col-md-3">
                                 <select id="select_role" class="select2 form-select" data-placeholder="Roles">
                                     <option value="">Roles</option>
                                     @foreach($roles as $d)
                                     <option value="{{ $d->id }}">{{ $d->name }}</option>
                                     @endforeach
-                                </select>
-                            </div>
-                            <div class=" col-md-3">
-                                <select id="select_gender" class="select2 form-select" data-placeholder="Gender">
-                                    <option value="">Gender</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
                                 </select>
                             </div>
                             <div class="offset-md-3 col-md-3 text-md-end text-center pt-3 pt-md-0">
@@ -354,7 +354,7 @@
                         @endcan
                         @can('setting/manage_account/users.update')
                         html +=
-                            `<a class=" text-success" title="Edit" href="{{ url('setting/manage_account/users/edit/` +
+                            ` <a class=" text-success" title="Edit" href="{{ url('setting/manage_account/users/edit/` +
                             row.idd + `') }}"><i class="bx bxs-edit"></i></a>`;
                         @endcan
                         @can('setting/manage_account/users.delete')

@@ -29,7 +29,7 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         //variabel digunakan untuk pilihan 
-        $roles = Role::get();
+        $roles = Role::orderBy('name')->get();
         $guard_names = Permission::select('guard_name')->groupBy('guard_name')->get();
         return view('configuration.permissions.index', compact('roles','guard_names'));
     }

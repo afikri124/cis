@@ -53,7 +53,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('msg','User "'.$request->name.'" successfully added!');
         }
         //variabel digunakan untuk pilihan Roles
-        $roles = Role::get();
+        $roles = Role::orderBy('name')->get();
         return view('configuration.users.index', compact('roles'));
     }
 
