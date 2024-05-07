@@ -53,6 +53,9 @@ Route::group(['prefix' => 'setting','middleware' => ['auth']],function () {
         Route::group(['prefix' => 'permissions'], function () { //route to manage permissions
             Route::any('/', [PermissionController::class, 'index'])->name('permissions.index');
             Route::get('/data', [PermissionController::class, 'data'])->name('permissions.data');
+            Route::get('/view/{id}', [PermissionController::class, 'view'])->name('permissions.view');
+            Route::get('/view/{id}/users', [PermissionController::class, 'view_users_data'])->name('permissions.view_users_data');
+            Route::get('/view/{id}/roles', [PermissionController::class, 'view_roles_data'])->name('permissions.view_roles_data');
         });
     });
 });

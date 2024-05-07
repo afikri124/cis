@@ -28,6 +28,7 @@ class PermissionController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('setting/manage_account/permissions.read');
         //variabel digunakan untuk pilihan 
         $roles = Role::orderBy('name')->get();
         $guard_names = Permission::select('guard_name')->groupBy('guard_name')->get();
@@ -36,8 +37,12 @@ class PermissionController extends Controller
 
     public function data(Request $request)
     {
+        $this->authorize('setting/manage_account/permissions.read');
         $data = Permission::
             with(['roles' => function ($query) {
+                $query->select('id');
+            }])
+            ->with(['users' => function ($query) {
                 $query->select('id');
             }])
             ->select('*')->orderBy("name");
@@ -64,6 +69,46 @@ class PermissionController extends Controller
                     return Crypt::encrypt($x['id']);
                 })
                 ->rawColumns(['idd'])
+                ->make(true);
+    }
+
+    public function view($id, Request $request)
+    {
+        $this->authorize('setting/manage_account/permissions.read');
+        //mencari data berdasarkan id
+        $data = Permission::find($id);
+        // dd($data);
+        return view('configuration.permissions.view', compact('data'));
+    }
+
+    public function view_users_data($id, Request $request)
+    {
+        $this->authorize('setting/manage_account/permissions.read');
+        $data = User::whereHas(
+            'permissions', function($q) use($id){
+                $q->where('permission_id', $id);
+            }
+            )->select('*')->orderBy("name");
+            return Datatables::of($data)
+                ->filter(function ($instance) use ($request) {
+                    //jika pengguna memfilter menggunakan pencarian
+                    if (!empty($request->get('search'))) {
+                        $search = $request->get('search');
+                        $instance->where('name', 'LIKE', "%$search%");
+                    }
+                })
+                ->make(true);
+    }
+
+    public function view_roles_data($id, Request $request)
+    {
+        $this->authorize('setting/manage_account/permissions.read');
+        $data = Role::whereHas(
+            'permissions', function($q) use($id){
+                $q->where('permission_id', $id);
+            }
+            )->select('*')->orderBy("name");
+            return Datatables::of($data)
                 ->make(true);
     }
 }

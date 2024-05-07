@@ -2,8 +2,9 @@
 @section('breadcrumb-items')
 <span class="text-muted fw-light">Setting /</span>
 <span class="text-muted fw-light">Manage Account /</span>
+<span class="text-muted fw-light">Permissions /</span>
 @endsection
-@section('title', 'Permissions')
+@section('title',  $data->name)
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}">
@@ -36,47 +37,40 @@
 
 @section('content')
 <div class="card">
+    <h5 class="card-header">Users have direct permissions </h5>
+    <hr class="my-0">
     <div class="card-datatable table-responsive">
-        <div class="card-header flex-column flex-md-row pb-0">
-            <div class="row">
-                <div class="col-12 pt-3 pt-md-0">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class=" col-md-3">
-                                <select id="select_guard_name" class="select2 form-select"
-                                    data-placeholder="Guard Name">
-                                    <option value="">Guard Name</option>
-                                    @foreach($guard_names as $d)
-                                    <option value="{{ $d->guard_name }}">{{ $d->guard_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class=" col-md-3">
-                                <select id="select_role" class="select2 form-select"
-                                    data-placeholder="Roles">
-                                    <option value="">Roles</option>
-                                    @foreach($roles as $d)
-                                    <option value="{{ $d->id }}">{{ $d->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <table class="table table-hover table-sm" id="datatable" width="100%">
             <thead>
                 <tr>
                     <th width="20px" data-priority="1">No</th>
-                    {{-- <th width="30px">ID</th> --}}
-                    <th data-priority="2">Name</th>
-                    <th width="100px">Guard Name</th>
-                    <th width="100px">Direct Users</th>
-                    <th width="100px">Roles</th>
+                    <th width="100px">Username</th>
+                    <th data-priority="2">Full Name</th>
+                    <th width="120px">Email</th>
+                    <th width="120px">Gender</th>
                 </tr>
             </thead>
         </table>
+    </div>
+</div>
+<div class="card mt-4">
+    <h5 class="card-header">Roles have permissions </h5>
+    <hr class="my-0">
+    <div class="card-datatable table-responsive">
+        <table class="table table-hover table-sm" id="datatable2" width="100%">
+            <thead>
+                <tr>
+                    <th width="20px" data-priority="1">No</th>
+                    <th width="100px" data-priority="3">Color</th>
+                    <th data-priority="2">Role name</th>
+                    <th >Description</th>
+                    <th width="120px">Guard Name</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="card-footer pt-0">
+        <a class="btn btn-outline-secondary" href="{{ route('permissions.index') }}">Back</a>
     </div>
 </div>
 @endsection
@@ -101,29 +95,6 @@
     });
 </script>
 @endif
-<script>
-    "use strict";
-    setTimeout(function () {
-        (function ($) {
-            "use strict";
-            $(".select2").select2({
-                allowClear: true,
-                minimumResultsForSearch: 7
-            });
-        })(jQuery);
-    }, 350);
-    setTimeout(function () {
-        (function ($) {
-            "use strict";
-            $(".select2-modal").select2({
-                dropdownParent: $('#newrecord'),
-                allowClear: true,
-                minimumResultsForSearch: 5
-            });
-        })(jQuery);
-    }, 350);
-
-</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var table = $('#datatable').DataTable({
@@ -131,15 +102,14 @@
             processing: true,
             serverSide: true,
             ordering: false,
+            searching: true,
             language: {
                 searchPlaceholder: 'Search..',
                 // url: "{{asset('assets/vendor/libs/datatables/id.json')}}"
             },
             ajax: {
-                url: "{{ route('permissions.data') }}",
+                url: "{{ route('permissions.view_users_data', ['id' => $data->id]) }}",
                 data: function (d) {
-                    d.select_guard_name = $('#select_guard_name').val(),
-                    d.select_role = $('#select_role').val(),
                     d.search = $('#datatable_filter input[type="search"]').val()
                 },
             },
@@ -154,19 +124,81 @@
                     },
                     className: "text-center"
                 },
-                // {
-                //     render: function (data, type, row, meta) {
-                //         var html = "<code><span title='" + row.id + "'>" + row.id +
-                //             "</span></code>";
-                //         return html;
-                //     },
-                // },
                 {
                     render: function (data, type, row, meta) {
-                        var html = `<a class="text-primary" title="` + row.name +
-                            `" href="{{ url('setting/manage_account/permissions/view/` +
-                            row.id + `') }}">` + row.name + `</a>`;
+                        var html = "<code><span title='" + row.username + "'>" + row.username +
+                            "</span></code>";
                         return html;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        var html = "<span title='" + row.name + "'>" + row.name +
+                            "</span>";
+                        return html;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        var html = "<span title='" + row.email + "'>" + row.email +
+                            "</span>";
+                        return html;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        if (row.gender != null) {
+                            return "<span title='" + row.gender + "'>" + row.gender + "</span>";
+                        }
+
+                    },
+                }
+            ]
+        });
+    });
+    $(document).ready(function () {
+        var table = $('#datatable2').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            searching: false,
+            language: {
+                searchPlaceholder: 'Search..',
+                // url: "{{asset('assets/vendor/libs/datatables/id.json')}}"
+            },
+            ajax: {
+                url: "{{ route('permissions.view_roles_data', ['id' => $data->id]) }}",
+                data: function (d) {
+                },
+            },
+            columnDefs: [{
+                "defaultContent": "-",
+                "targets": "_all"
+            }],
+            columns: [{
+                    render: function (data, type, row, meta) {
+                        var no = (meta.row + meta.settings._iDisplayStart + 1);
+                        return no;
+                    },
+                    className: "text-center"
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return '<code class="badge" style="font-size:8pt;background-color:'+row.color+'">' + row.color + '</code>';
+                    },
+                    className: "text-md-center"
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        var html = "<span title='" + row.name + "'>" + row.name +
+                            "</span>";
+                        return html;
+                    },
+                },
+                {
+                    render: function (data, type, row, meta) {
+                        return row.description;
                     },
                 },
                 {
@@ -174,28 +206,9 @@
                         return row.guard_name;
                     },
                     className: "text-md-center"
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return row.users.length;
-                    },
-                    className: "text-md-center"
-                },
-                {
-                    render: function (data, type, row, meta) {
-                        return row.roles.length;
-                    },
-                    className: "text-md-center"
                 }
             ]
         });
-        $('#select_guard_name').change(function () {
-            table.draw();
-        });
-        $('#select_role').change(function () {
-            table.draw();
-        });
     });
-
 </script>
 @endsection

@@ -4,7 +4,7 @@
 <span class="text-muted fw-light">Manage Account /</span>
 <span class="text-muted fw-light">Users /</span>
 @endsection
-@section('title', $data->username)
+@section('title', $data->name)
 
 @section('css')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}">
@@ -87,7 +87,7 @@
                             </span>
                             @enderror
                         </div>
-
+                        @can('setting/manage_account/users.update-role')
                         <div class="mb-3 col-md-12">
                             <label class="form-label">Roles</label>
                             <select class="select2 form-select" multiple="multiple" name="roles[]" id="select2Dark">
@@ -97,6 +97,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3 col-md-12">
+                            <label class="form-label">Direct Permissions <i class="text-primary">(optional)</i></label>
+                            <select class="select2 form-select" multiple="multiple" name="permissions[]" id="select2Dark2">
+                                @foreach($permissions as $p)
+                                <option value="{{$p->id}}" {{ $data->hasDirectPermission($p->id) ? 'selected' : '' }}>
+                                    {{$p->name}} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endcan
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-primary me-2">Submit</button>
@@ -126,7 +136,7 @@
         e.length && e.selectpicker(), t.length && t.each(function () {
             var e = $(this);
             e.wrap('<div class="position-relative"></div>').select2({
-                placeholder: "Select value",
+                placeholder: "Select",
                 dropdownParent: e.parent()
             })
         }), c.length && c.wrap('<div class="position-relative"></div>').select2({

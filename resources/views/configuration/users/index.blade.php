@@ -60,6 +60,7 @@
                             <div class=" col-md-3">
                                 <select id="select_role" class="select2 form-select" data-placeholder="Roles">
                                     <option value="">Roles</option>
+                                    <option value="1">admin (Administrator)</option>
                                     @foreach($roles as $d)
                                     <option value="{{ $d->id }}">{{ $d->name }}</option>
                                     @endforeach
@@ -178,6 +179,9 @@
                                 <select class="form-select @error('roles') is-invalid @enderror select2-modal"
                                     multiple="multiple" name="roles[]" id="select2Dark"
                                     data-placeholder=" -- Select --">
+                                    @can('setting/manage_account/users.update-role')
+                                    <option value="1">admin (Administrator)</option>
+                                    @endcan
                                     @foreach($roles as $role)
                                     <option value="{{$role->id}}"
                                         {{ (in_array($role->id, old('roles') ?? []) ? "selected": "") }}>

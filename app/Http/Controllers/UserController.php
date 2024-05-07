@@ -12,6 +12,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Permission\Contracts\Role as ContractsRole;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Contracts\Permission as ContractsPermission;
+use Spatie\Permission\Models\Permission;
 use Carbon\Carbon;
 use App\Models\User;
 
@@ -53,7 +55,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('msg','User "'.$request->name.'" successfully added!');
         }
         //variabel digunakan untuk pilihan Roles
-        $roles = Role::orderBy('name')->get();
+        $roles = Role::where('name',"!=",'admin')->orderBy('name')->get();
         return view('configuration.users.index', compact('roles'));
     }
 
@@ -104,8 +106,9 @@ class UserController extends Controller
         } catch (DecryptException $e) {
             return redirect()->route('users.index');
         }
-        //variabel digunakan untuk pilihan Roles
-        $roles   = Role::get();
+        //variabel digunakan untuk pilihan 
+        $roles   = Role::orderBy('name')->get();
+        $permissions   = Permission::orderBy('name')->get();
         //jika menerima method post dari form
         if ($request->isMethod('post')) {
             $this->validate($request, [ 
@@ -122,10 +125,12 @@ class UserController extends Controller
                 'gender' => $request->gender,
                 'updated_at' => Carbon::now()
             ]);
-            //menghapus semua roles yg dimiliki
-            $detach = User::find($id)->roles()->detach();
-            //menambahkan ulang roles ke user
-            $attach = User::find($id)->roles()->attach($request->roles);
+            if(Auth::user()->can('setting/manage_account/users.update-role')){
+                //sync ulang roles ke user
+                $attach = User::find($id)->syncRoles($request->roles);
+                //sync ulang direct permissions ke user
+                $set_direct_permissions = User::find($id)->syncPermissions($request->permissions);
+            } 
             //mencatat perubahan di log
             Log::info(Auth::user()->name." update user profile #".$id.", ".$request->name);
             //kembali ke halaman edit dengan pesan notifikasi
@@ -133,7 +138,7 @@ class UserController extends Controller
         }
         //mencari data user berdasarkan id
         $data = User::find($id);
-        return view('configuration.users.edit', compact('data','roles'));
+        return view('configuration.users.edit', compact('data','roles','permissions'));
     }
 
     public function delete(Request $request) {

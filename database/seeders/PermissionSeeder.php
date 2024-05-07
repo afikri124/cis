@@ -19,13 +19,13 @@ class PermissionSeeder extends Seeder
     {
         //update permissions disini
         $data = [
-            ["guard_name" => "web", "name" => "log-viewers.read"],
             ["guard_name" => "web", "name" => "control panel.read"],
             ["guard_name" => "web", "name" => "setting.read"],
             ["guard_name" => "web", "name" => "setting/manage_account.read"],
             ["guard_name" => "web", "name" => "setting/manage_account/users.create"],
             ["guard_name" => "web", "name" => "setting/manage_account/users.read"],
             ["guard_name" => "web", "name" => "setting/manage_account/users.update"],
+            ["guard_name" => "web", "name" => "setting/manage_account/users.update-role"],
             ["guard_name" => "web", "name" => "setting/manage_account/users.delete"],
             ["guard_name" => "web", "name" => "setting/manage_account/users.reset-password"],
             ["guard_name" => "web", "name" => "setting/manage_account/roles.create"],
